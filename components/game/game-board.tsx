@@ -7,7 +7,7 @@ import { HexGrid } from './hex-grid';
 import { ScoreBoard } from './score-board';
 import { QuestionModal } from './question-modal';
 import { WinCelebration } from './win-celebration';
-import { HexCell, Team, GameState, GridSize, GRID_SIZES, DEFAULT_GRID_SIZE } from '@/lib/game-types';
+import { HexCell, Team, GameState, GridSize, GRID_SIZES, DEFAULT_GRID_SIZE, DEFAULT_TIMER_DURATION } from '@/lib/game-types';
 import { generateHexGrid, checkWin, calculateScore } from '@/lib/game-logic';
 import {
   DropdownMenu,
@@ -26,6 +26,7 @@ export function GameBoard() {
     winner: null,
     winningPath: [],
     gridSize: DEFAULT_GRID_SIZE,
+    timerDuration: DEFAULT_TIMER_DURATION,
   }));
 
   const [selectedHex, setSelectedHex] = useState<HexCell | null>(null);
@@ -73,6 +74,7 @@ export function GameBoard() {
         redScore: calculateScore(finalHexagons, 'red'),
         winner,
         winningPath,
+        timerDuration: prev.timerDuration,
       };
     });
 
@@ -101,8 +103,9 @@ export function GameBoard() {
       winner: null,
       winningPath: [],
       gridSize,
+      timerDuration: gameState.timerDuration,
     });
-  }, [gridSize]);
+  }, [gridSize, gameState.timerDuration]);
 
   // Handle grid size change
   const handleGridSizeChange = useCallback((newSize: GridSize) => {
@@ -114,8 +117,9 @@ export function GameBoard() {
       winner: null,
       winningPath: [],
       gridSize: newSize,
+      timerDuration: gameState.timerDuration,
     });
-  }, []);
+  }, [gameState.timerDuration]);
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
@@ -126,7 +130,7 @@ export function GameBoard() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isModalOpen) return;
-      
+
       if (e.key === 'b' || e.key === 'B' || e.key === '1') {
         handleBlueAnswer();
       } else if (e.key === 'r' || e.key === 'R' || e.key === '3') {
@@ -163,9 +167,9 @@ export function GameBoard() {
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
-        
+
         {/* Grid pattern overlay */}
-        <div 
+        <div
           className="absolute inset-0 opacity-5"
           style={{
             backgroundImage: `
@@ -190,17 +194,16 @@ export function GameBoard() {
               <span className="font-bold">{gridSize}x{gridSize}</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            align="start" 
+          <DropdownMenuContent
+            align="start"
             className="bg-card/95 backdrop-blur-xl border-border/50"
           >
             {GRID_SIZES.map((size) => (
               <DropdownMenuItem
                 key={size}
                 onClick={() => handleGridSizeChange(size)}
-                className={`cursor-pointer ${
-                  size === gridSize ? 'bg-primary/20 text-primary' : ''
-                }`}
+                className={`cursor-pointer ${size === gridSize ? 'bg-primary/20 text-primary' : ''
+                  }`}
               >
                 <span className="font-bold">{size}x{size}</span>
                 <span className="mr-2 text-muted-foreground text-xs">
@@ -246,6 +249,7 @@ export function GameBoard() {
         onBlueAnswer={handleBlueAnswer}
         onRedAnswer={handleRedAnswer}
         onWrongAnswer={handleWrongAnswer}
+        timerDuration={gameState.timerDuration}
       />
 
       {/* Win Celebration */}
@@ -255,7 +259,7 @@ export function GameBoard() {
       />
 
       {/* Keyboard shortcuts hint */}
-      <motion.div 
+      <motion.div
         className="fixed bottom-4 left-1/2 -translate-x-1/2 text-xs text-muted-foreground bg-secondary/50 backdrop-blur-sm px-4 py-2 rounded-full border border-border/30"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

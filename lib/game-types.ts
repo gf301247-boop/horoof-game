@@ -18,6 +18,7 @@ export interface GameState {
   winner: Team;
   winningPath: string[];
   gridSize: GridSize;
+  timerDuration: number;
 }
 
 export const ARABIC_LETTERS = [
@@ -28,6 +29,7 @@ export const ARABIC_LETTERS = [
 
 export const GRID_SIZES: GridSize[] = [5, 6];
 export const DEFAULT_GRID_SIZE: GridSize = 5;
+export const DEFAULT_TIMER_DURATION = 30;
 
 // Question data type
 export interface QuestionData {

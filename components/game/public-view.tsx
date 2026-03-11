@@ -11,13 +11,13 @@ import { useGame } from '@/lib/game-context';
 // Public Question Display - No answers, no controls
 function PublicQuestionDisplay() {
   const { selectedHex, gameState } = useGame();
-  const [timeLeft, setTimeLeft] = useState(30);
+  const [timeLeft, setTimeLeft] = useState(gameState.timerDuration);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   const resetTimer = useCallback(() => {
-    setTimeLeft(30);
+    setTimeLeft(gameState.timerDuration);
     setIsTimerRunning(true);
-  }, []);
+  }, [gameState.timerDuration]);
 
   useEffect(() => {
     if (selectedHex.isOpen) {
@@ -104,12 +104,12 @@ function PublicQuestionDisplay() {
                     strokeLinecap="round"
                     className={getTimerRingColor()}
                     strokeDasharray={283}
-                    animate={{ strokeDashoffset: 283 - (283 * timeLeft) / 30 }}
+                    animate={{ strokeDashoffset: 283 - (283 * timeLeft) / gameState.timerDuration }}
                     transition={{ duration: 0.5 }}
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.span 
+                  <motion.span
                     className={`text-4xl font-bold ${getTimerColor()}`}
                     key={timeLeft}
                     initial={{ scale: 1.2 }}
@@ -128,7 +128,7 @@ function PublicQuestionDisplay() {
                 transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
               >
                 <div className="w-40 h-40 rounded-3xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center border border-border/50">
-                  <span 
+                  <span
                     className="text-8xl font-bold text-foreground"
                     style={{ textShadow: '0 0 40px oklch(0.6 0.2 250 / 0.6)' }}
                   >
@@ -166,7 +166,7 @@ function PublicQuestionDisplay() {
                     {questionData?.question || (
                       <>
                         أذكر كلمة تبدأ بحرف{' '}
-                        <span 
+                        <span
                           className="font-bold text-3xl"
                           style={{ color: 'oklch(0.65 0.22 250)' }}
                         >
@@ -212,8 +212,8 @@ export function PublicView() {
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
-        
-        <div 
+
+        <div
           className="absolute inset-0 opacity-5"
           style={{
             backgroundImage: `

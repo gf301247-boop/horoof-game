@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
-import { GameState, HexCell, GridSize, DEFAULT_GRID_SIZE, Team, QuestionData } from './game-types';
+import { GameState, HexCell, GridSize, DEFAULT_GRID_SIZE, DEFAULT_TIMER_DURATION, Team, QuestionData } from './game-types';
 import { generateHexGrid, checkWin, calculateScore } from './game-logic';
 import { QUESTIONS_DATA } from './questionsData';
 import { useBroadcastChannel, BroadcastAction } from '@/hooks/use-broadcast-channel';
@@ -25,6 +25,7 @@ interface GameContextType {
   awardRed: () => void;
   passWrong: () => void;
   changeGridSize: (size: GridSize) => void;
+  changeTimerDuration: (duration: number) => void;
   playAgain: () => void;
   shuffleQuestions: () => void;
   resetSessionMemory: () => void;
@@ -54,6 +55,7 @@ export function GameProvider({ children, isHost }: GameProviderProps) {
     winner: null,
     winningPath: [],
     gridSize: DEFAULT_GRID_SIZE,
+    timerDuration: DEFAULT_TIMER_DURATION,
   }));
   const [selectedHex, setSelectedHex] = useState<SelectedHexState>({
     hex: null,
@@ -194,7 +196,7 @@ export function GameProvider({ children, isHost }: GameProviderProps) {
   const passWrong = useCallback(() => {
     setSelectedHex({ hex: null, isOpen: false, question: null });
     broadcast({ type: 'HEX_DESELECTED' });
-    
+
     setGameState((prev) => {
       broadcast({ type: 'SYNC_STATE', payload: prev });
       return prev;
@@ -252,6 +254,7 @@ export function GameProvider({ children, isHost }: GameProviderProps) {
       winner: null,
       winningPath: [],
       gridSize,
+      timerDuration: gameState.timerDuration,
     };
 
     setGameState(newState);
@@ -269,6 +272,7 @@ export function GameProvider({ children, isHost }: GameProviderProps) {
       winner: null,
       winningPath: [],
       gridSize: newSize,
+      timerDuration: gameState.timerDuration,
     };
     setGameState(newState);
     setSelectedHex({ hex: null, isOpen: false, question: null });
@@ -284,6 +288,7 @@ export function GameProvider({ children, isHost }: GameProviderProps) {
       winner: null,
       winningPath: [],
       gridSize,
+      timerDuration: gameState.timerDuration,
     };
     setGameState(newState);
     setSelectedHex({ hex: null, isOpen: false, question: null });
@@ -294,6 +299,14 @@ export function GameProvider({ children, isHost }: GameProviderProps) {
   const resetSessionMemory = useCallback(() => {
     setUsedQuestionIds([]);
   }, []);
+
+  const changeTimerDuration = useCallback((newDuration: number) => {
+    setGameState((prev) => {
+      const newState = { ...prev, timerDuration: newDuration };
+      broadcast({ type: 'SYNC_STATE', payload: newState });
+      return newState;
+    });
+  }, [broadcast]);
 
   return (
     <GameContext.Provider
@@ -309,6 +322,7 @@ export function GameProvider({ children, isHost }: GameProviderProps) {
         awardRed,
         passWrong,
         changeGridSize,
+        changeTimerDuration,
         playAgain,
         shuffleQuestions,
         resetSessionMemory,

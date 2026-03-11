@@ -13,6 +13,7 @@ interface QuestionModalProps {
   onBlueAnswer: () => void;
   onRedAnswer: () => void;
   onWrongAnswer: () => void;
+  timerDuration: number;
 }
 
 export function QuestionModal({
@@ -22,14 +23,15 @@ export function QuestionModal({
   onBlueAnswer,
   onRedAnswer,
   onWrongAnswer,
+  timerDuration,
 }: QuestionModalProps) {
-  const [timeLeft, setTimeLeft] = useState(30);
+  const [timeLeft, setTimeLeft] = useState(timerDuration);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   const resetTimer = useCallback(() => {
-    setTimeLeft(30);
+    setTimeLeft(timerDuration);
     setIsTimerRunning(true);
-  }, []);
+  }, [timerDuration]);
 
   useEffect(() => {
     if (isOpen) {
@@ -129,12 +131,12 @@ export function QuestionModal({
                         strokeLinecap="round"
                         className={getTimerRingColor()}
                         strokeDasharray={283}
-                        animate={{ strokeDashoffset: 283 - (283 * timeLeft) / 30 }}
+                        animate={{ strokeDashoffset: 283 - (283 * timeLeft) / timerDuration }}
                         transition={{ duration: 0.5 }}
                       />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <motion.span 
+                      <motion.span
                         className={`text-2xl font-bold ${getTimerColor()}`}
                         key={timeLeft}
                         initial={{ scale: 1.2 }}
@@ -153,7 +155,7 @@ export function QuestionModal({
                     transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
                   >
                     <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-team-blue/30 to-team-red/30 flex items-center justify-center border border-border/50">
-                      <span 
+                      <span
                         className="text-6xl font-bold text-foreground"
                         style={{ textShadow: '0 0 30px oklch(0.6 0.2 250 / 0.5)' }}
                       >

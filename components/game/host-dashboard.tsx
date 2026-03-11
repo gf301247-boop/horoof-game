@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Grid3X3, CheckCircle, XCircle, RotateCcw, Monitor, Eye, Shuffle } from 'lucide-react';
+import { Grid3X3, CheckCircle, XCircle, RotateCcw, Monitor, Eye, Shuffle, Clock, Plus, Minus } from 'lucide-react';
 import { HexGrid } from './hex-grid';
 import { WinCelebration } from './win-celebration';
 import { useGame } from '@/lib/game-context';
@@ -16,14 +16,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 // Mini hex cell for the mini-map
-function MiniHexCell({ 
-  letter, 
-  owner, 
+function MiniHexCell({
+  letter,
+  owner,
   isSelected,
   isWinningPath,
-  onClick 
-}: { 
-  letter: string; 
+  onClick
+}: {
+  letter: string;
   owner: 'blue' | 'red' | null;
   isSelected: boolean;
   isWinningPath: boolean;
@@ -31,7 +31,7 @@ function MiniHexCell({
 }) {
   const blueColor = 'oklch(0.65 0.22 250)';
   const redColor = 'oklch(0.6 0.25 25)';
-  
+
   return (
     <button
       onClick={onClick}
@@ -44,13 +44,13 @@ function MiniHexCell({
         ${isWinningPath ? 'animate-pulse' : ''}
       `}
       style={{
-        backgroundColor: owner === 'blue' 
-          ? blueColor 
-          : owner === 'red' 
-            ? redColor 
+        backgroundColor: owner === 'blue'
+          ? blueColor
+          : owner === 'red'
+            ? redColor
             : 'oklch(0.2 0.02 250)',
-        boxShadow: isWinningPath 
-          ? `0 0 10px ${owner === 'blue' ? blueColor : redColor}` 
+        boxShadow: isWinningPath
+          ? `0 0 10px ${owner === 'blue' ? blueColor : redColor}`
           : 'none',
       }}
     >
@@ -69,7 +69,7 @@ function HostControlPanel() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedHex.isOpen) return;
-      
+
       if (e.key === 'b' || e.key === 'B' || e.key === '1') {
         awardBlue();
       } else if (e.key === 'r' || e.key === 'R' || e.key === '3') {
@@ -107,7 +107,7 @@ function HostControlPanel() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             {/* Letter */}
-            <div 
+            <div
               className="w-16 h-16 rounded-xl flex items-center justify-center"
               style={{
                 background: 'linear-gradient(135deg, oklch(0.65 0.22 250 / 0.3), oklch(0.6 0.25 25 / 0.3))',
@@ -115,7 +115,7 @@ function HostControlPanel() {
             >
               <span className="text-4xl font-bold text-foreground">{selectedHex.hex.letter}</span>
             </div>
-            
+
             <div>
               <p className="text-sm text-muted-foreground">اختيار الفائز</p>
               <p className="text-xl font-bold text-foreground">
@@ -123,7 +123,7 @@ function HostControlPanel() {
               </p>
             </div>
           </div>
-          
+
           <Button variant="ghost" size="icon" onClick={deselectHex}>
             <XCircle className="w-5 h-5" />
           </Button>
@@ -145,9 +145,9 @@ function HostControlPanel() {
               </div>
 
               {/* Answer - Host Only */}
-              <div 
+              <div
                 className="rounded-xl p-4 border-2 border-dashed"
-                style={{ 
+                style={{
                   borderColor: 'oklch(0.5 0.15 120)',
                   backgroundColor: 'oklch(0.5 0.15 120 / 0.1)',
                 }}
@@ -225,13 +225,13 @@ function HostControlPanel() {
 }
 
 export function HostDashboard() {
-  const { gameState, gridSize, selectHex, changeGridSize, playAgain, shuffleQuestions, selectedHex } = useGame();
+  const { gameState, gridSize, selectHex, changeGridSize, playAgain, shuffleQuestions, selectedHex, changeTimerDuration } = useGame();
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none opacity-50">
-        <div 
+        <div
           className="absolute inset-0"
           style={{
             backgroundImage: `
@@ -251,7 +251,7 @@ export function HostDashboard() {
               <Monitor className="w-4 h-4 text-primary" />
               <span className="text-sm font-bold text-primary">لوحة التحكم</span>
             </div>
-            
+
             {/* Grid Size Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -299,9 +299,9 @@ export function HostDashboard() {
           {/* Scores */}
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <div 
+              <div
                 className="w-8 h-8 rounded-full flex items-center justify-center font-bold"
-                style={{ 
+                style={{
                   backgroundColor: 'oklch(0.65 0.22 250)',
                   boxShadow: 'none',
                 }}
@@ -312,9 +312,9 @@ export function HostDashboard() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold" style={{ color: 'oklch(0.6 0.25 25)' }}>أحمر</span>
-              <div 
+              <div
                 className="w-8 h-8 rounded-full flex items-center justify-center font-bold"
-                style={{ 
+                style={{
                   backgroundColor: 'oklch(0.6 0.25 25)',
                   boxShadow: 'none',
                 }}
@@ -335,10 +335,10 @@ export function HostDashboard() {
               <Grid3X3 className="w-5 h-5" />
               اللوحة
             </h2>
-            
+
             {/* Mini grid */}
             <div className="flex justify-center">
-              <div 
+              <div
                 className="grid gap-1"
                 style={{
                   gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
@@ -376,10 +376,43 @@ export function HostDashboard() {
               <Monitor className="w-5 h-5" />
               لوحة التحكم
             </h2>
-            
+
             <AnimatePresence mode="wait">
               <HostControlPanel key={selectedHex.hex?.id || 'empty'} />
             </AnimatePresence>
+
+            {/* Timer Settings */}
+            <div className="mt-6 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 p-6">
+              <h3 className="text-md font-bold text-foreground mb-4 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-primary" />
+                إعدادات المؤقت
+              </h3>
+              <div className="flex items-center justify-between bg-secondary/30 rounded-xl p-4 border border-border/30">
+                <div className="flex items-center gap-4">
+                  <div className="text-3xl font-bold text-foreground w-12 text-center">
+                    {gameState.timerDuration}
+                  </div>
+                  <span className="text-muted-foreground">ثانية</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => changeTimerDuration(Math.max(5, gameState.timerDuration - 5))}
+                    className="w-12 h-12 rounded-xl bg-secondary hover:bg-secondary/80 border-border/50"
+                  >
+                    <Minus className="w-5 h-5" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => changeTimerDuration(Math.min(300, gameState.timerDuration + 5))}
+                    className="w-12 h-12 rounded-xl bg-secondary hover:bg-secondary/80 border-border/50"
+                  >
+                    <Plus className="w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+            </div>
 
             {/* Keyboard shortcuts */}
             <div className="mt-4 bg-secondary/30 rounded-xl p-4 border border-border/30">

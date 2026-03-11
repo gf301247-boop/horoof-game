@@ -14,8 +14,8 @@ interface HexCellProps {
 export function HexCell({ hex, onClick, disabled, width = 90, height = 100 }: HexCellProps) {
   const getHexColor = () => {
     if (hex.isWinningPath) {
-      return hex.owner === 'blue' 
-        ? 'fill-[oklch(0.7_0.25_250)]' 
+      return hex.owner === 'blue'
+        ? 'fill-[oklch(0.7_0.25_250)]'
         : 'fill-[oklch(0.7_0.28_25)]';
     }
     if (hex.owner === 'blue') return 'fill-team-blue';
@@ -67,7 +67,7 @@ export function HexCell({ hex, onClick, disabled, width = 90, height = 100 }: He
           animate={hex.owner ? { scale: [0.9, 1] } : {}}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         />
-        
+
         {/* Inner glow effect */}
         <polygon
           points={hexPoints}
@@ -102,16 +102,15 @@ export function HexCell({ hex, onClick, disabled, width = 90, height = 100 }: He
         } : {}}
         transition={{ duration: 0.4 }}
       >
-        <span 
-          className={`font-bold select-none ${
-            hex.owner 
-              ? 'text-foreground' 
+        <span
+          className={`font-bold select-none ${hex.owner
+              ? 'text-foreground'
               : 'text-muted-foreground'
-          }`}
-          style={{ fontSize: width > 90 ? '1.75rem' : '1.5rem' }}
-          style={{ 
-            textShadow: hex.owner 
-              ? '0 0 10px currentColor, 0 2px 4px rgba(0,0,0,0.5)' 
+            }`}
+          style={{
+            fontSize: width > 90 ? '1.75rem' : '1.5rem',
+            textShadow: hex.owner
+              ? '0 0 10px currentColor, 0 2px 4px rgba(0,0,0,0.5)'
               : '0 2px 4px rgba(0,0,0,0.3)'
           }}
         >
