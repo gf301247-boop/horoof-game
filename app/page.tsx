@@ -65,11 +65,11 @@ export default function Page() {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              حروف
+             مع عماد حروف
             </h1>
             <Hexagon className="w-16 h-16" style={{ color: 'oklch(0.6 0.25 25)' }} />
           </div>
-          <p className="text-xl text-muted-foreground">لعبة الحروف التلفزيونية</p>
+          <p className="text-xl text-muted-foreground">لعبة الحروف </p>
         </motion.div>
 
         {/* Description */}
@@ -79,7 +79,7 @@ export default function Page() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          صِل الحروف من الأعلى إلى الأسفل (الفريق الأزرق) أو من اليسار إلى اليمين (الفريق الأحمر) للفوز!
+          اربط الحروف من الأعلى إلى الأسفل (الفريق الأزرق) أو من اليسار إلى اليمين (الفريق الأحمر) للفوز!
         </motion.p>
 
         {/* Action Buttons */}
