@@ -65,13 +65,13 @@ export default function Page() {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-             مع عماد حروف
+             حروف مع عماد
             </h1>
             <Hexagon className="w-16 h-16" style={{ color: 'oklch(0.6 0.25 25)' }} />
           </div>
           <p className="text-xl text-muted-foreground">لعبة الحروف </p>
         </motion.div>
-
+        
         {/* Description */}
         <motion.p
           className="text-lg text-muted-foreground mb-12 leading-relaxed"
