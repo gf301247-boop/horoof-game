@@ -8,34 +8,24 @@ import { ScoreBoard } from './score-board';
 import { WinCelebration } from './win-celebration';
 import { useGame } from '@/lib/game-context';
 
-// Public Question Display - No answers, no controls
-function PublicQuestionDisplay() {
-  const { selectedHex, gameState } = useGame();
-  const [timeLeft, setTimeLeft] = useState(gameState.timerDuration);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-
-  const resetTimer = useCallback(() => {
-    setTimeLeft(gameState.timerDuration);
-    setIsTimerRunning(true);
-  }, [gameState.timerDuration]);
-
-  useEffect(() => {
-    if (selectedHex.isOpen) {
-      resetTimer();
-    } else {
-      setIsTimerRunning(false);
-    }
-  }, [selectedHex.isOpen, resetTimer]);
+function PublicQuestionModalContent({
+  hex,
+  questionData,
+  timerDuration,
+}: {
+  hex: any;
+  questionData: any;
+  timerDuration: number;
+}) {
+  const [timeLeft, setTimeLeft] = useState(timerDuration);
 
   useEffect(() => {
-    if (!isTimerRunning || timeLeft <= 0) return;
-
+    if (timeLeft <= 0) return;
     const timer = setInterval(() => {
       setTimeLeft((prev) => prev - 1);
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [isTimerRunning, timeLeft]);
+  }, [timeLeft]);
 
   const getTimerColor = () => {
     if (timeLeft > 20) return 'text-green-400';
@@ -49,10 +39,8 @@ function PublicQuestionDisplay() {
     return 'stroke-red-400';
   };
 
-  if (!selectedHex.hex || !selectedHex.isOpen) return null;
-
   return (
-    <AnimatePresence>
+    <>
       <motion.div
         className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md"
         initial={{ opacity: 0 }}
@@ -104,7 +92,7 @@ function PublicQuestionDisplay() {
                     strokeLinecap="round"
                     className={getTimerRingColor()}
                     strokeDasharray={283}
-                    animate={{ strokeDashoffset: 283 - (283 * timeLeft) / gameState.timerDuration }}
+                    animate={{ strokeDashoffset: 283 - (283 * timeLeft) / timerDuration }}
                     transition={{ duration: 0.5 }}
                   />
                 </svg>
@@ -132,7 +120,7 @@ function PublicQuestionDisplay() {
                     className="text-8xl font-bold text-foreground"
                     style={{ textShadow: '0 0 40px oklch(0.6 0.2 250 / 0.6)' }}
                   >
-                    {selectedHex.hex.letter}
+                    {hex.letter}
                   </span>
                 </div>
                 <motion.div
@@ -147,40 +135,50 @@ function PublicQuestionDisplay() {
                   transition={{ duration: 2, repeat: Infinity }}
                 />
               </motion.div>
-
-              {/* (Turn indicator removed) */}
             </div>
           </div>
 
           {/* Question Area - Clean Display (No Answer Shown) */}
           <div className="px-12 pb-12">
-            {(() => {
-              const questionData = selectedHex.question;
-              return (
-                <div className="bg-secondary/30 rounded-2xl p-8 border border-border/30">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Clock className="w-5 h-5 text-muted-foreground" />
-                    <span className="text-lg text-muted-foreground">السؤال</span>
-                  </div>
-                  <p className="text-2xl text-foreground leading-relaxed text-center">
-                    {questionData?.question || (
-                      <>
-                        أذكر كلمة تبدأ بحرف{' '}
-                        <span
-                          className="font-bold text-3xl"
-                          style={{ color: 'oklch(0.65 0.22 250)' }}
-                        >
-                          {selectedHex.hex.letter}
-                        </span>
-                      </>
-                    )}
-                  </p>
-                </div>
-              );
-            })()}
+            <div className="bg-secondary/30 rounded-2xl p-8 border border-border/30">
+              <div className="flex items-center gap-2 mb-4">
+                <Clock className="w-5 h-5 text-muted-foreground" />
+                <span className="text-lg text-muted-foreground">السؤال</span>
+              </div>
+              <p className="text-2xl text-foreground leading-relaxed text-center">
+                {questionData?.question || (
+                  <>
+                    أذكر كلمة تبدأ بحرف{' '}
+                    <span
+                      className="font-bold text-3xl"
+                      style={{ color: 'oklch(0.65 0.22 250)' }}
+                    >
+                      {hex.letter}
+                    </span>
+                  </>
+                )}
+              </p>
+            </div>
           </div>
         </motion.div>
       </motion.div>
+    </>
+  );
+}
+
+function PublicQuestionDisplay() {
+  const { selectedHex, gameState } = useGame();
+
+  return (
+    <AnimatePresence>
+      {selectedHex.isOpen && selectedHex.hex && (
+        <PublicQuestionModalContent
+          key={selectedHex.hex.id}
+          hex={selectedHex.hex}
+          questionData={selectedHex.question}
+          timerDuration={gameState.timerDuration}
+        />
+      )}
     </AnimatePresence>
   );
 }
