@@ -45,7 +45,7 @@ export function HexGrid({ hexagons, gridSize, onHexClick, disabled }: HexGridPro
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          أزرق يبدأ
+          أزرق 
         </motion.div>
       </div>
       <div className="absolute -bottom-8 left-1/2 -translate-x-1/2">
@@ -54,7 +54,7 @@ export function HexGrid({ hexagons, gridSize, onHexClick, disabled }: HexGridPro
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          أزرق ينتهي
+          أزرق
         </motion.div>
       </div>
       <div className="absolute top-1/2 -translate-y-1/2 -left-20">
@@ -64,7 +64,7 @@ export function HexGrid({ hexagons, gridSize, onHexClick, disabled }: HexGridPro
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity, delay: 1 }}
         >
-          أحمر يبدأ
+          أحمر 
         </motion.div>
       </div>
       <div className="absolute top-1/2 -translate-y-1/2 -right-20">
@@ -74,7 +74,7 @@ export function HexGrid({ hexagons, gridSize, onHexClick, disabled }: HexGridPro
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity, delay: 1 }}
         >
-          أحمر ينتهي
+          أحمر
         </motion.div>
       </div>
 
